@@ -19,6 +19,8 @@ while 1:
     tcpSocketClient, clientDir = tcpSocketServ.accept()
 
     message = tcpSocketClient.recv(2048).decode()
+    if message == "terminate":
+        break
     response = message.upper()
 
     print("se reviejde", message)
