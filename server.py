@@ -38,11 +38,6 @@ while 1:
             if message == cache[i][1]:
                 existe = 1
 
-        # respuesta servidor -> cliente
-        toSend = str(newServerPort)
-        tcpSocketClient.send(toSend.encode())
-        print("Envio puerto UDP a cliente")
-
         # Hacer el GET
         #no esta en cache
         if existe == 0: 
@@ -61,14 +56,14 @@ while 1:
             for i in range(len(cache)):
                 if cache[i] == [0,"",""]:
                     cache[i] = [0, message, header]
-                    con += 1
                     break
                 cache[i][0] = cache[i][0] + 1
 
             # cache esta lleno
-            if con == 5:
+            if con > 5:
                 cache.remove(max(cache))
                 cache.append([0, message, header])
+            con = con + 1
                 
             
             # cierre de socket usados en TCP
@@ -78,15 +73,22 @@ while 1:
         else:
             for i in range(len(cache)):
                 if cache[i][1] == message:
+                    cache[i][0] = 0
                     header = cache[i][2]
-                cache[i][0] += 1
+                    #cache[i][0] = cache[i][0] + 1
 
+        # respuesta servidor -> cliente
+        toSend = str(newServerPort)
+        tcpSocketClient.send(toSend.encode())
+        print("\n\t------>Envio puerto UDP a cliente<------\n")
         tcpSocketClient.close()
         #------------------------------------------------------> Termino conexion TCP
+        
         print("\n")
         for l in cache:
             print((l[0],l[1]))
         print("\n")
+        
         #------------------------------------------------------> Inicio conexion UDP
         # Sockets para conexion UDP
         # SOCK_DGRAM -> indica UDP
