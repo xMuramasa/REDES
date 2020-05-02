@@ -18,7 +18,6 @@ tcpSocketServ.bind(('', serverPort))
 tcpSocketServ.listen(1)
 
 #read cache.txt
-
 try:
     with open('cache.txt', 'r') as filehandle:
         cache = json.load(filehandle)
