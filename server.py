@@ -14,70 +14,103 @@ tcpSocketServ = s.socket(s.AF_INET, s.SOCK_STREAM)
 tcpSocketServ.bind(('', serverPort))
 
 # ya su handshake
-tcpSocketServ.listen(2)
-print("Servidor TCP escuchando en el puerto: ", serverPort)
+tcpSocketServ.listen(1)
 
-cache = []
+#cahe_i = [tiempo,url,header]
+cache = [ [int(0),"",""] , [int(0),"",""] , [int(0),"",""] , [int(0),"",""] , [int(0),"",""] ]
+existe = 0
+con = 0
 
 while 1:
+    print("Servidor TCP escuchando en el puerto: ", serverPort)
     # Aceptar el mensaje del clienteTCP a servidorTCP
     tcpSocketClient, clientDir = tcpSocketServ.accept()
+
     message = tcpSocketClient.recv(2048).decode()
-
-    # Terminar comunicacion
-    if message == "terminate":
-        print("Cago el server")
-        break
-
-    # Hacer el GET
-    socketUrl = s.socket(s.AF_INET, s.SOCK_STREAM)
-    socketUrl.connect((message, 80))   
-    socketUrl.sendall(b'GET / HTTP/1.1\r\n\r\n')
     
-    # recibir respuesta GET
-    headReceived = socketUrl.recv(2048)
-    header = headReceived.decode("cp437")
-    
-    # split header para cliente
-    header = header.split("<")[0]
-    cache.append(header)
+    # header cualquier
+    header = ""
 
-    # respuesta servidor -> cliente
-    toSend = str(newServerPort)
-    tcpSocketClient.send(toSend.encode())
-    print("Envio puerto UDP a cliente")
-    
-    # cierre de socket usados en TCP
-    socketUrl.close()
-    tcpSocketClient.close()
-    
-    # Inicio conexion UDP 
+    if message != "terminate":
+        print("\n\t------>El cliente Ha comenzado la conexion<------\n")
 
-    # Sockets para conexion UDP
-    udpSocketServ = s.socket(s.AF_INET, s.SOCK_DGRAM) # SOCK_DGRAM -> indica UDP
-    udpSocketServ.bind(('', newServerPort))
+        for i in range(len(cache)):
+            if message == cache[i][1]:
+                existe = 1
 
-    print('\nServidor UDP escuchando en el puerto:', newServerPort)
-    print("Esperando respuesta cliente")
+        # respuesta servidor -> cliente
+        toSend = str(newServerPort)
+        tcpSocketClient.send(toSend.encode())
+        print("Envio puerto UDP a cliente")
 
-    message, clientDir = udpSocketServ.recvfrom(2048)
-    decoded = message.decode()
-    if decoded == "terminate":
-        print("Cago el server")
-        break
-
-    print('Respuesta cliente: ', decoded)
-    respuesta = message.decode()
-
-    answer = 'Respuestaaaaaa: '+ header
-    udpSocketServ.sendto(answer.encode(), clientDir)
-        
-    # cierre server UDP
-    print("Cierre servidor UDP")
-    udpSocketServ.close()
+        # Hacer el GET
+        #no esta en cache
+        if existe == 0: 
+            socketUrl = s.socket(s.AF_INET, s.SOCK_STREAM)
+            socketUrl.connect((message, 80))   
+            socketUrl.sendall(b'GET / HTTP/1.1\r\n\r\n')
             
+            # recibir respuesta GET
+            headReceived = socketUrl.recv(2048)
+            header = headReceived.decode("cp437")
+            
+            # split header para cliente
+            header = header.split("<")[0]
+
+            # Guardar en cache
+            for i in range(len(cache)):
+                if cache[i] == [0,"",""]:
+                    cache[i] = [0, message, header]
+                    con += 1
+                    break
+                cache[i][0] = cache[i][0] + 1
+
+            # cache esta lleno
+            if con == 5:
+                cache.remove(max(cache))
+                cache.append([0, message, header])
+                
+            
+            # cierre de socket usados en TCP
+            socketUrl.close()
+        
+        #esta en cache
+        else:
+            for i in range(len(cache)):
+                if cache[i][1] == message:
+                    header = cache[i][2]
+                cache[i][0] += 1
+
+        tcpSocketClient.close()
+        #------------------------------------------------------> Termino conexion TCP
+        print("\n")
+        for l in cache:
+            print((l[0],l[1]))
+        print("\n")
+        #------------------------------------------------------> Inicio conexion UDP
+        # Sockets para conexion UDP
+        # SOCK_DGRAM -> indica UDP
+        udpSocketServ = s.socket(s.AF_INET, s.SOCK_DGRAM)
+        udpSocketServ.bind(('', newServerPort))
+        print("\n\t------>Inicio conexion UDP con cliente<------\n")
+        print('\nServidor UDP escuchando en el puerto:', newServerPort)
+        print("\nEsperando respuesta cliente\n")
+
+        message, clientDir = udpSocketServ.recvfrom(2048)
+        decoded = message.decode()
+
+        print('Respuesta cliente: ', decoded)
+        
+        # envio header al cliente
+        udpSocketServ.sendto(header.encode(), clientDir)
+            
+        udpSocketServ.close()
+        print("\n\t------>Cierre conexion UDP con cliente<------\n")
+        #------------------------------------------------------> End conexion UDP
+    else:
+        print("\n\t------>El cliente Ha terminado la conexion<------\n")
+
 
 # cierre conexion TCP
-tcpSocketClient.close()
 tcpSocketServ.close()
 
