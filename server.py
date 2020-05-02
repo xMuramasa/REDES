@@ -1,4 +1,5 @@
 import socket as s
+import json
 
 # TCP Server
 # AF_INET -> IPV4
@@ -16,8 +17,18 @@ tcpSocketServ.bind(('', serverPort))
 # ya su handshake
 tcpSocketServ.listen(1)
 
+#read cache.txt
+
+try:
+    with open('cache.txt', 'r') as filehandle:
+        cache = json.load(filehandle)
+except(FileNotFoundError):
+    cache = [ [int(0),"",""] , [int(0),"",""] , [int(0),"",""] , [int(0),"",""] , [int(0),"",""] ]
+    with open('cache.txt', 'w') as filehandle:
+        json.dump(cache, filehandle)
+
+
 #cahe_i = [tiempo,url,header]
-cache = [ [int(0),"",""] , [int(0),"",""] , [int(0),"",""] , [int(0),"",""] , [int(0),"",""] ]
 existe = 0
 con = 0
 
@@ -75,7 +86,6 @@ while 1:
                 if cache[i][1] == message:
                     cache[i][0] = 0
                     header = cache[i][2]
-                    #cache[i][0] = cache[i][0] + 1
 
         # respuesta servidor -> cliente
         toSend = str(newServerPort)
@@ -112,6 +122,8 @@ while 1:
     else:
         print("\n\t------>El cliente Ha terminado la conexion<------\n")
 
+    with open('cache.txt', 'w') as filehandle:
+        json.dump(cache, filehandle)
 
 # cierre conexion TCP
 tcpSocketServ.close()
