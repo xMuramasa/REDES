@@ -21,7 +21,7 @@ while True:
 
     # recepcion url a buscar en el servidor
     print("Enviar: \n\tURL http: si desa buscar una wea\n\tterminate: si desea terminar la conexion")
-    url = input("\nIngrese URLE: ")
+    url = input("\nIngrese URL: ")
 
     # si se recive terminate, se termina la conexion
     if url == "terminate":
@@ -56,7 +56,7 @@ while True:
     messageToDecode, _ = udpSocketClient.recvfrom(2048)
     message = messageToDecode.decode()
 
-    with open("cache/" + url + ".txt", "w") as urlData:
+    with open("HEADERS/" + url + ".txt", "w") as urlData:
         if message != "":
             print("\n\t------>Header recibido<------\n")
             urlData.write(message)
