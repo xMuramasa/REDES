@@ -116,7 +116,7 @@ while 1:
     else:
         print("\n\t------>El cliente Ha terminado la conexion<------\n")
 
-    with open('cache.txt', 'w') as filehandle:
+    with open('cache/cache.txt', 'w') as filehandle:
         json.dump(cache, filehandle)
 
 # cierre conexion TCP
