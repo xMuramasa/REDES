@@ -19,11 +19,11 @@ tcpSocketServ.listen(1)
 
 #read cache.txt
 try:
-    with open('cache.txt', 'r') as filehandle:
+    with open('cache/cache.txt', 'r') as filehandle:
         cache = json.load(filehandle)
 except(FileNotFoundError):
     cache = [ [int(0),"",""] , [int(0),"",""] , [int(0),"",""] , [int(0),"",""] , [int(0),"",""] ]
-    with open('cache.txt', 'w') as filehandle:
+    with open('cache/cache.txt', 'w') as filehandle:
         json.dump(cache, filehandle)
 
 
@@ -92,11 +92,6 @@ while 1:
         print("\n\t------>Envio puerto UDP a cliente<------\n")
         tcpSocketClient.close()
         #------------------------------------------------------> Termino conexion TCP
-        
-        print("\n")
-        for l in cache:
-            print((l[0],l[1]))
-        print("\n")
         
         #------------------------------------------------------> Inicio conexion UDP
         # Sockets para conexion UDP

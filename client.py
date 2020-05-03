@@ -56,7 +56,7 @@ while True:
     messageToDecode, _ = udpSocketClient.recvfrom(2048)
     message = messageToDecode.decode()
 
-    with open(url + ".txt", "w") as urlData:
+    with open("cache/" + url + ".txt", "w") as urlData:
         if message != "":
             print("\n\t------>Header recibido<------\n")
             urlData.write(message)
