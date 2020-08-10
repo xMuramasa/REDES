@@ -11,10 +11,18 @@ github: "https://github.com/xMuramasa/REDES/tree/master/Lab-3"
 - python 2.7
 
 # Uso
-#### Parte 1 (se encuentra en la carpeta topo 1)
+## Parte 1 (se encuentra en la carpeta topo 1)
 
+#### Diagrama de la Red 1:
 
+![Red 1](images/red_1.png )
 
+- Pregunta: ¿Que ocurre al eliminar uno de los enlaces entre los switches?
+
+- Respuesta: 
+    - Para el caso de la red en su estado normal, no hay mayores dificultades para la trayectoria de los frames.
+
+### Instrucciones de uso Parte 1:
 - Se deben copiar los archivos de la carpeta forwarding del repositorio del laboratorio en el directorio "pox/pox/forwarding"
 
 - Para ejecutar el controlador, se debe utilizar la siguiente linea para ejecutar:
@@ -30,5 +38,13 @@ github: "https://github.com/xMuramasa/REDES/tree/master/Lab-3"
 - Para ejecutar mininet y la red, se debe hacer con la siguiente linea:
     - sudo mn --custom topologia1.py --topo mytopo --controller remote --switch ovsk --mac
 
+-------------------- 
 
-#### Parte 2
+## Parte 2 (se encuentra en la carpeta topo 2)
+
+#### Diagrama de la Red 2:
+
+![Red 2](images/red_2.png )
+
+### Instrucciones de uso Parte 2:
+- Se deben copiar los archivos de la carpeta forwarding del repositorio del laboratorio en el directorio "pox/pox/forwarding"
