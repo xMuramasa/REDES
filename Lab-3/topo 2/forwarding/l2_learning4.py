@@ -25,6 +25,7 @@ import pox.openflow.libopenflow_01 as of
 from pox.lib.util import dpid_to_str, str_to_dpid
 from pox.lib.util import str_to_bool
 import time
+import pox.lib.packet as pkt
 
 log = core.getLogger()
 
@@ -173,6 +174,7 @@ class LearningSwitch (object):
 
         # mismo puerto de origen y destino
         # event.port = puerto origen del paquete
+        """
         if port == event.port:  # 5
           # 5a
           log.warning("Same port for packet from %s -> %s on %s.%s.  Drop."
@@ -184,7 +186,7 @@ class LearningSwitch (object):
         # 6
         log.debug("installing flow for %s.%i -> %s.%i" %
                   (packet.src, event.port, packet.dst, port))
-        
+        """
         # comprobar direccion destino, source, puerto de entrada
         # modificar solo variable port
 
@@ -195,7 +197,8 @@ class LearningSwitch (object):
         puerto = event.port 
         origen = str(packet.src)
         destino = str(packet.dst)
-
+        
+        #Bloqueo de conexion host-host
         rules = ["00:00:00:00:00:01", "00:00:00:00:00:02", "00:00:00:00:00:03",
                  "00:00:00:00:00:04", "00:00:00:00:00:05", "00:00:00:00:00:06"]
 
@@ -206,13 +209,84 @@ class LearningSwitch (object):
             drop(10)
             return 
 
+        # Direcionalidad 
+
+        # SWITCH T
+        if puerto == 32:
+          if destino == "00:00:00:00:00:07":
+            port = 14
+
+        elif puerto == 14:
+          port = 15
+      
+        
+        # SWITCH V
+        if puerto == 16:
+          # hacia A
+          if destino == "00:00:00:00:00:01":
+            port = 2
+          # hacia B
+          elif destino == "00:00:00:00:00:02":
+            port = 4
+          # hacia C, D, E o F
+          elif destino == "00:00:00:00:00:03" or destino == "00:00:00:00:00:04" or destino == "00:00:00:00:00:05" or destino == "00:00:00:00:00:06":
+            port = 17
+       
+        elif puerto == 2 or puerto == 4:
+          port = 21
+          
+
+        # SWITCH X
+        if puerto == 18:
+          # hacia C
+          if destino == "00:00:00:00:00:03":
+            port = 6
+          # hacia D
+          elif destino == "00:00:00:00:00:04":
+            port = 8
+          #  hacia E o F
+          elif destino == "00:00:00:00:00:05" or destino == "00:00:00:00:00:06":
+            port = 19
+
+        elif puerto == 6 or puerto == 8:
+          port = 23
+
+
+        # SWITCH Z
+        if puerto == 20:
+          # hacia E
+          if destino == "00:00:00:00:00:05":
+            port = 10
+          # hacia F
+          elif destino == "00:00:00:00:00:06":
+            port = 12
+
+        elif puerto == 10 or puerto == 12:
+          port = 25
+
+
+
+        # SWITCH U
+        if puerto == 22 or puerto == 30:
+          port = 31
+
+        # SWITCH W
+        if puerto == 24 or puerto == 28:
+          port = 29
+        
+        # SWITCH W
+        if puerto == 26:
+          port = 27
+
+
+
         msg = of.ofp_flow_mod()
         msg.match = of.ofp_match.from_packet(packet, event.port)
 
         msg.idle_timeout = 10
         msg.hard_timeout = 30
 
-        #print(origen, destino, puerto, port)
+        print(origen, destino, puerto, port)
 
         msg.actions.append(of.ofp_action_output(port=port))
         msg.data = event.ofp  # 6a
