@@ -47,4 +47,4 @@ github: "https://github.com/xMuramasa/REDES/tree/master/Lab-3"
 ![Red 2](images/red_2.png )
 
 ### Instrucciones de uso Parte 2:
-- Se deben copiar los archivos de la carpeta forwarding del repositorio del laboratorio en el directorio "pox/pox/forwarding"
+- Se deben copiar los archivos de la carpeta forwarding del repositorio del laboratorio en el directorio "pox/pox/misc"
