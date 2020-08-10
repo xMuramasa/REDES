@@ -20,9 +20,14 @@ github: "https://github.com/xMuramasa/REDES/tree/master/Lab-3"
 - Pregunta: ¿Que ocurre al eliminar uno de los enlaces entre los switches?
 
 - Respuesta: 
-    - Para el caso de la red en su estado normal, no hay mayores dificultades para la trayectoria de los frames.
+    - Para el caso de la red en su estado normal, no hay mayores dificultades para la trayectoria de los frames, debido a que las tablas de forwarding se actualizan para que coincida con la topologia.
 
 ### Instrucciones de uso Parte 1:
+- Los Hosts se encuentran rotulados como aparece en la imagen, los switches se encuentran rotulados de la siguiente manera:
+    - switch X = s1
+    - switch Y = s2
+    - switch Z = s3
+
 - Se deben copiar los archivos de la carpeta forwarding del repositorio del laboratorio en el directorio "pox/pox/forwarding"
 
 - Para ejecutar el controlador, se debe utilizar la siguiente linea para ejecutar:
@@ -47,10 +52,19 @@ github: "https://github.com/xMuramasa/REDES/tree/master/Lab-3"
 ![Red 2](images/red_2.png )
 
 ### Instrucciones de uso Parte 2:
+- Los Hosts se encuentran rotulados como aparece en la imagen, los switches se encuentran rotulados de la siguiente manera:
+    - switch X = s1
+    - switch Y = s2
+    - switch Z = s3
+    - switch U = s4
+    - switch V = s5
+    - switch W = s6
+    - switch T = s7
+    
 - Se deben copiar los archivos de la carpeta forwarding del repositorio del laboratorio en el directorio "pox/pox/forwarding"
 
 - Para ejecutar el controlador, se debe utilizar la siguiente linea para ejecutar:
-        - python pox.py --verbose openflow.spanning_tree --no-flood --hold-down openflow.discovery forwarding.l2_learning4
+        - python pox.py --verbose openflow.spanning_tree --no-flood --hold-down openflow.discovery forwarding.l2_learning4SSS
 
 - Para ejecutar mininet y la red, se debe hacer con la siguiente linea:
     - sudo mn --custom topologia2.py --topo mytopo --controller remote --switch ovsk --mac
