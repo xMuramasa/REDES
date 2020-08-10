@@ -166,7 +166,7 @@ class LearningSwitch (object):
       else:
         # puerto de destino del paquete
         port = self.macToPort[packet.dst]
-        
+        """
         # mismo puerto de origen y destino
         # event.port = puerto origen del paquete
         if port == event.port: # 5
@@ -180,7 +180,7 @@ class LearningSwitch (object):
         # 6
         log.debug("installing flow for %s.%i -> %s.%i" %
                   (packet.src, event.port, packet.dst, port))
-        
+        """
         # comprobar direccion destino, source, puerto de entrada
         # modificar solo variable port
 
@@ -207,7 +207,7 @@ class LearningSwitch (object):
             port = 17
           #hacia F
           else:
-            port = 17
+            port = 12
 
         #Soy F
         elif puerto == 12:
@@ -219,7 +219,7 @@ class LearningSwitch (object):
             port = 17
           #hacia E
           else:
-            port = 17
+            port = 10
 
         elif puerto == 16:
           #Hacia E
@@ -248,11 +248,17 @@ class LearningSwitch (object):
         # SWITCH X
         # Soy A
         elif puerto == 2:
-          port = 13
+          if destino == "00:00:00:00:00:02":
+            port = 4
+          else:
+            port = 13
 
         # Soy B
         elif puerto == 4:
-          port = 13
+          if destino == "00:00:00:00:00:01":
+            port = 2
+          else:
+            port = 13
 
         elif puerto == 18:
           # hacia A
@@ -279,11 +285,17 @@ class LearningSwitch (object):
         # SWITCH Y
         # Soy C
         elif puerto == 6:
-          port = 14
+          if destino == "00:00:00:00:00:04":
+            port = 8
+          else:
+            port = 14
 
         # Soy D
         elif puerto == 8:
-          port = 14
+          if destino == "00:00:00:00:00:03":
+            port = 6
+          else:
+            port = 14
 
         elif puerto == 14:
           # hacia C
@@ -303,6 +315,7 @@ class LearningSwitch (object):
           # hacia D
           elif destino == "00:00:00:00:00:04":
             port = 8
+
           # de paso
           else:
             port = 14

@@ -207,90 +207,95 @@ class LearningSwitch (object):
             return 
         if destino not in rules and destino != "00:00:00:00:00:07":
             drop(10)
-            return 
+            return
 
-        # Direcionalidad 
+        tcp = packet.find("tcp")
 
-        # SWITCH T
-        if puerto == 32:
-          if destino == "00:00:00:00:00:07":
-            port = 14
+        if tcp is not None:
+          if 'HTTP' in tcp.payload:       
 
-        elif puerto == 14:
-          port = 15
-      
-        
-        # SWITCH V
-        if puerto == 16:
-          # hacia A
-          if destino == "00:00:00:00:00:01":
-            port = 2
-          # hacia B
-          elif destino == "00:00:00:00:00:02":
-            port = 4
-          # hacia C, D, E o F
-          elif destino == "00:00:00:00:00:03" or destino == "00:00:00:00:00:04" or destino == "00:00:00:00:00:05" or destino == "00:00:00:00:00:06":
-            port = 17
-       
-        elif puerto == 2 or puerto == 4:
-          port = 21
+            # Direcionalidad 
+
+            # SWITCH T
+            if puerto == 32:
+              if destino == "00:00:00:00:00:07":
+                port = 14
+
+            elif puerto == 14:
+              port = 15
           
+            
+            # SWITCH V
+            if puerto == 16:
+              # hacia A
+              if destino == "00:00:00:00:00:01":
+                port = 2
+              # hacia B
+              elif destino == "00:00:00:00:00:02":
+                port = 4
+              # hacia C, D, E o F
+              elif destino == "00:00:00:00:00:03" or destino == "00:00:00:00:00:04" or destino == "00:00:00:00:00:05" or destino == "00:00:00:00:00:06":
+                port = 17
+          
+            elif puerto == 2 or puerto == 4:
+              port = 21
+              
 
-        # SWITCH X
-        if puerto == 18:
-          # hacia C
-          if destino == "00:00:00:00:00:03":
-            port = 6
-          # hacia D
-          elif destino == "00:00:00:00:00:04":
-            port = 8
-          #  hacia E o F
-          elif destino == "00:00:00:00:00:05" or destino == "00:00:00:00:00:06":
-            port = 19
+            # SWITCH X
+            if puerto == 18:
+              # hacia C
+              if destino == "00:00:00:00:00:03":
+                port = 6
+              # hacia D
+              elif destino == "00:00:00:00:00:04":
+                port = 8
+              #  hacia E o F
+              elif destino == "00:00:00:00:00:05" or destino == "00:00:00:00:00:06":
+                port = 19
 
-        elif puerto == 6 or puerto == 8:
-          port = 23
-
-
-        # SWITCH Z
-        if puerto == 20:
-          # hacia E
-          if destino == "00:00:00:00:00:05":
-            port = 10
-          # hacia F
-          elif destino == "00:00:00:00:00:06":
-            port = 12
-
-        elif puerto == 10 or puerto == 12:
-          port = 25
-
-
-
-        # SWITCH U
-        if puerto == 22 or puerto == 30:
-          port = 31
-
-        # SWITCH W
-        if puerto == 24 or puerto == 28:
-          port = 29
-        
-        # SWITCH W
-        if puerto == 26:
-          port = 27
+            elif puerto == 6 or puerto == 8:
+              port = 23
 
 
+            # SWITCH Z
+            if puerto == 20:
+              # hacia E
+              if destino == "00:00:00:00:00:05":
+                port = 10
+              # hacia F
+              elif destino == "00:00:00:00:00:06":
+                port = 12
 
-        msg = of.ofp_flow_mod()
-        msg.match = of.ofp_match.from_packet(packet, event.port)
+            elif puerto == 10 or puerto == 12:
+              port = 25
 
-        msg.idle_timeout = 10
-        msg.hard_timeout = 30
 
-        print(origen, destino, puerto, port)
 
-        msg.actions.append(of.ofp_action_output(port=port))
-        msg.data = event.ofp  # 6a
-        self.connection.send(msg)
+            # SWITCH U
+            if puerto == 22 or puerto == 30:
+              port = 31
+
+            # SWITCH W
+            if puerto == 24 or puerto == 28:
+              port = 29
+            
+            # SWITCH W
+            if puerto == 26:
+              port = 27
+
+
+
+            msg = of.ofp_flow_mod()
+            msg.match = of.ofp_match.from_packet(packet, event.port)
+
+            msg.idle_timeout = 10
+            msg.hard_timeout = 30
+
+            print(origen, destino, puerto, port)
+
+            msg.actions.append(of.ofp_action_output(port=port))
+            msg.data = event.ofp  # 6a
+            self.connection.send(msg)
 
 
 class l2_learning (object):
